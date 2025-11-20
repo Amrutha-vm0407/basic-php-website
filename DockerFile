@@ -1,30 +1,28 @@
 FROM ubuntu:18.04
 ARG DEBIAN_FRONTEND=noninteractive
 
-# Use a working mirror
 RUN sed -i 's|http://archive.ubuntu.com/|http://us.archive.ubuntu.com/|g' /etc/apt/sources.list
 
-# Install Apache and PHP
 RUN apt-get update -y && apt-get install -y apache2 php libapache2-mod-php
 
-# Enable Apache mods
 RUN a2enmod rewrite
 
-# Copy your Apache virtual host config
+# Copy Apache vhost config
 COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
 
-# Create the directory your Apache config expects
+# Enable updated site config
+RUN a2ensite 000-default.conf && a2dissite 000-default
+
+# Create expected DocumentRoot
 RUN mkdir -p /var/www/html/phpstatic
 
-# Copy project files into the correct document root
+# Copy your PHP project files
 COPY . /var/www/html/phpstatic/
 
-# Set permissions
+# Fix permissions
 RUN chown -R www-data:www-data /var/www/html/phpstatic \
     && chmod -R 755 /var/www/html/phpstatic
 
-# Expose port
 EXPOSE 80
 
-# Start Apache in foreground
 ENTRYPOINT ["apachectl", "-D", "FOREGROUND"]
