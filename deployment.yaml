@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: book
+  labels:
+    app: book
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: book
+  template:
+    metadata:
+      labels:
+        app: book
+    spec:
+      containers:
+      - name: book
+        image: aadithya001/php:v1
+        ports:
+        - containerPort: 80
