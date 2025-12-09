@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: book
-        image: aadithya001/php:v1
+        image: amruthavm0407/phpimage:v1
         ports:
         - containerPort: 80
